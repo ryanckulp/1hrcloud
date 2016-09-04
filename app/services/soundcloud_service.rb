@@ -42,13 +42,13 @@ class SoundcloudService
       from = URI.encode(start_date.strftime(time_formula))
       to = URI.encode(end_date.strftime(time_formula))
 
-      "created_at[from]=#{from}&created_at[to]=#{to}&duration[from]=3480000&duration[to]=3720000&filter=public&limit=200"
+      "created_at[from]=#{from}&created_at[to]=#{to}&duration[from]=3480000&duration[to]=3720000&filter=public&genres=Electronic&limit=200"
     end
 
     def hot_tracks
       resp = Curl.get(BASE_URL + TRACKS_ENDPOINT + "?client_id=#{CLIENT_ID}")
 
-      filters = create_filters({from: 1440, to: 1380}) # past 23-24 hours
+      filters = create_filters({from: 1800, to: 1680}) # past 28-30 hours
       resp = Curl.get(BASE_URL + TRACKS_ENDPOINT + "?client_id=#{CLIENT_ID}&#{filters}")
       tracks = JSON.parse(resp.body)
 
@@ -63,7 +63,10 @@ class SoundcloudService
           # 2. does this track have a ridiculous BPM?
           next if !!t['bpm'] && t['bpm'] > 200
 
-          # 3. ensure track has at least N plays
+          # 3. skip tracks that are live recordings
+          next if !!t['track_type'] && t['track_type'] == 'recording'
+
+          # 4. ensure track has at least N plays
           t['id'] if t['playback_count'] > 500
 
         end

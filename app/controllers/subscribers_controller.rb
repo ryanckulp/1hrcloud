@@ -1,9 +1,9 @@
 class SubscribersController < ApplicationController
 
   def create
-    subscriber = Subscriber.new(subscriber_params)
+    @subscriber = Subscriber.new(subscriber_params)
 
-    if subscriber.save
+    if @subscriber.save
       flash[:notice] = "Great, you'll start getting new mixes tomorrow."
       redirect_to about_path
     else

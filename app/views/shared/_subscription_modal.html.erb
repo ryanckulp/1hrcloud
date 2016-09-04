@@ -1,3 +1,4 @@
+<%= simple_form_for(@subscriber) do |f| %>
 <div class="modal fade" id="subscribeModal" tabindex="-1" role="dialog" aria-labelledby="subscribeModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -5,15 +6,14 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="subscribeModalLabel">Get the newest tracks, delivered daily to your inbox.</h4>
       </div>
-      <%= simple_form_for(@subscriber) do |f| %>
         <div class="modal-body">
             <%= f.input :email, label: 'Your Email', placeholder: 'john@lovesmusic.com' %>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
-          <button type="submit" class="btn btn-success">Sign Me Up</button>
+          <%= f.submit value: 'Sign Me Up', class: "btn btn-success" %>
         </div>
-      <% end %>
     </div>
   </div>
 </div>
+<% end %>

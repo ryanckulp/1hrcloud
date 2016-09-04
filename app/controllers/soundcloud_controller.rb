@@ -6,7 +6,7 @@ class SoundcloudController < ApplicationController
   end
 
   def auth
-    code = params['code'] # => 9a8349fd0aa7224d05476e2d7b281d2c
+    code = params['code']
 
     auth_params = {
       client_id: ENV['SOUNDCLOUD_CLIENT_ID'],

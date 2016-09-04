@@ -61,7 +61,7 @@ class SoundcloudService
           next if tags.any? {|tag| NEGATIVE_TAGS.include?(tag)} # ignore track if it matches negative keywords
 
           # 2. does this track have a ridiculous BPM?
-          next if !!track['bpm'] && track['bpm'] > 200
+          next if !!t['bpm'] && t['bpm'] > 200
 
           # 3. ensure track has at least N plays
           t['id'] if t['playback_count'] > 500

@@ -12,4 +12,7 @@ Rails.application.routes.draw do
 
   get 'connect', to: "soundcloud#connect"
   get 'soundcloud/connected', to: "soundcloud#auth"
+
+  # static
+  get 'about', to: "pages#about", as: 'about'
 end

@@ -14,9 +14,12 @@ class SoundcloudService
   PLAYLISTS_ENDPOINT = '/playlists/'
   TRACKS_ENDPOINT = '/tracks/'
 
-  # user accounts
+  # pointers
   PLAYLIST_ID = ENV['SOUNDCLOUD_PLAYLIST_ID']
+
+  # filters
   NEGATIVE_TAGS = ['food', 'cook', 'how-to', 'learn', 'podcast']
+  TIME_FORMULA = "%Y-%m-%d %H:%M:%S" # coerces Ruby datetime to soundcloud (yyyy-mm-dd hh:mm:ss)
 
   class << self
 
@@ -30,19 +33,26 @@ class SoundcloudService
       playlists = JSON.parse(resp.body)
     end
 
-    def create_filters(options)
-      # 58 minutes --> 3480 seconds --> 3480000 ms
-      # 62 minutes --> 3480 seconds --> 3840000 ms
-
-      # sort tracks that have been around at least XX hours
-      time_formula = "%Y-%m-%d %H:%M:%S" # for coercing Ruby datetime to soundcloud format
+    # sort tracks that have been around at least XX hours
+    def created_at_filter(options)
       start_date = options[:from].minutes.ago
       end_date = options[:to].minutes.ago
+      from = URI.encode(start_date.strftime(TIME_FORMULA))
+      to = URI.encode(end_date.strftime(TIME_FORMULA))
 
-      from = URI.encode(start_date.strftime(time_formula))
-      to = URI.encode(end_date.strftime(time_formula))
+      "created_at[from]=#{from}&created_at[to]=#{to}"
+    end
 
-      "created_at[from]=#{from}&created_at[to]=#{to}&duration[from]=3480000&duration[to]=3720000&filter=public&genres=Electronic&limit=200"
+    # 58 -> 62 mins; 3480000 ms -> 3840000 ms
+    def duration_filter
+      "duration[from]=3480000&duration[to]=3720000"
+    end
+
+    def generate_filters(options)
+      created_at_timespan = created_at_filter(options)
+      duration = duration_filter
+
+      "#{created_at_timespan}&#{duration}&filter=public&genres=Electronic&limit=200"
     end
 
     def hot_tracks

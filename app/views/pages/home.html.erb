@@ -4,32 +4,13 @@
   <h1>Programmatic SoundCloud Mixes, Curated Daily.</h1>
   <p>One Hour Cloud is an open-source algorithm that find the best hour-long sets for free.</p>.
   <button class="btn btn-lg btn-success">Listen Now</button>
-  <button class="btn btn-lg btn-default soundcloud" data-toggle="modal" data-target="#subscribeModal">Subscribe Daily</button>
+  <button class="btn btn-lg btn-default soundcloud" data-toggle="modal" data-target="#subscribeModal">Subscribe</button>
 </div>
 
 <div id="soundcloud-widget">
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="subscribeModal" tabindex="-1" role="dialog" aria-labelledby="subscribeModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="subscribeModalLabel">Get the newest tracks, delivered daily to your inbox.</h4>
-      </div>
-      <%= simple_form_for(@subscriber) do |f| %>
-        <div class="modal-body">
-            <%= f.input :email, placeholder: 'john@gmail.com' %>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
-          <button type="submit" class="btn btn-primary">Sign Me Up</button>
-        </div>
-      <% end %>
-    </div>
-  </div>
-</div>
+<%= render "shared/subscription_modal" %>
 
 <script>
 $(function() {

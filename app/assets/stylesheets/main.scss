@@ -36,12 +36,14 @@ div.paging-eof.sc-ir {display: none !important;}
 
 // iPhone 5
 @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
-	// insert
+	h1 {font-size: 2.5em}
+	.jumbotron {padding-top: 0px}
+	.btn-lg {font-size: 14px}
 }
 
 // iPhone 6
 @media only screen and (min-device-width : 375px) and (max-device-width : 627px) {
-	// insert
+	.jumbotron {padding-top: 75px}
 }
 
 // iPhone 6+

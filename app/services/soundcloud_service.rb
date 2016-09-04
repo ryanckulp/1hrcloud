@@ -122,7 +122,7 @@ class SoundcloudService
           http.headers['Authorization'] = "OAuth #{access_token}"
         end
 
-        playlist = Playlist.find_or_create_by(soundcloud_id: playlist_id)
+        playlist = Playlist.find_or_create_by(soundcloud_id: PLAYLIST_ID)
         playlist.track_ids = final_track_ids
         playlist.save
       end

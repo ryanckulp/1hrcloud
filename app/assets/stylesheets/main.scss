@@ -1,4 +1,4 @@
-/* Global */
+// Global
 body {font-family: 'Raleway', Helvetica, Arial}
 .jumbotron {background-color: transparent; text-align: center; padding: 150px 50px 25px;}
 .jumbotron h1 {font-size: 3em}
@@ -6,16 +6,21 @@ body {font-family: 'Raleway', Helvetica, Arial}
 .soundcloud {background-color: #FF5500; border: none; color: white}
 .soundcloud:hover {background-color: #ce4500; color: white}
 
-/* Navigation */
+// Navigation
 .navbar {background-color: transparent; border: none}
-.navbar-toggle {border: none}
+.navbar-toggle {border: none; padding-top: 18px}
+.navbar-brand {padding: 0px 15px; height: 70px;}
+.navbar-nav > li > a {padding-top: 24px; font-size: 22px;}
 
 // Soundcloud widget
 #soundcloud-widget {display: none}
 div.paging-eof.sc-ir {display: none !important;}
 .multiSounds__details {background-color: white !important; border: none !important}
 
-/* User Authentication */
+// About
+.about {font-size: 22px}
+
+// Devise
 .form-signin {max-width: 350px; padding: 15px; margin: 0 auto;}
 .form-signin .form-signin-heading, .form-signin .checkbox {margin-bottom: 10px;}
 .form-signin .checkbox {font-weight: normal;}

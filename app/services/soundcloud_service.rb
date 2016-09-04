@@ -20,6 +20,8 @@ class SoundcloudService
   # filters
   NEGATIVE_TAGS = ['food', 'cook', 'how-to', 'learn', 'podcast']
   TIME_FORMULA = "%Y-%m-%d %H:%M:%S" # coerces Ruby datetime to soundcloud (yyyy-mm-dd hh:mm:ss)
+  MINIMUM_PLAY_COUNT = ENV['SOUNDCLOUD_MINIMUM_PLAYS'].to_i
+  MAXIMUM_BPM = ENV['SOUNDCLOUD_MAXIMUM_BPM'].to_i
 
   class << self
 
@@ -56,9 +58,7 @@ class SoundcloudService
     end
 
     def hot_tracks
-      resp = Curl.get(BASE_URL + TRACKS_ENDPOINT + "?client_id=#{CLIENT_ID}")
-
-      filters = create_filters({from: 1800, to: 1680}) # past 28-30 hours
+      filters = generate_filters({from: 1800, to: 1680}) # past 28-30 hours
       resp = Curl.get(BASE_URL + TRACKS_ENDPOINT + "?client_id=#{CLIENT_ID}&#{filters}")
       tracks = JSON.parse(resp.body)
 
@@ -71,13 +71,13 @@ class SoundcloudService
           next if tags.any? {|tag| NEGATIVE_TAGS.include?(tag)} # ignore track if it matches negative keywords
 
           # 2. does this track have a ridiculous BPM?
-          next if !!t['bpm'] && t['bpm'] > 200
+          next if !!t['bpm'] && t['bpm'] > MAXIMUM_BPM
 
           # 3. skip tracks that are live recordings
           next if !!t['track_type'] && t['track_type'] == 'recording'
 
           # 4. ensure track has at least N plays
-          t['id'] if t['playback_count'] > 500
+          t['id'] if t['playback_count'] > MINIMUM_PLAY_COUNT
 
         end
       end.compact

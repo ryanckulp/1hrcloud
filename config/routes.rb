@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   root 'pages#home'
 
+  resources :subscribers
   devise_for :users, :controllers => {:registrations => "registrations"}
   devise_scope :user do
     get 'start', to: "registrations#start", as: 'start'

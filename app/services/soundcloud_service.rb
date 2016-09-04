@@ -16,6 +16,7 @@ class SoundcloudService
 
   # user accounts
   PLAYLIST_ID = ENV['SOUNDCLOUD_PLAYLIST_ID']
+  NEGATIVE_TAGS = ['food', 'cook', 'how-to', 'learn', 'podcast']
 
   class << self
 
@@ -31,9 +32,9 @@ class SoundcloudService
 
     def create_filters(options)
       # 58 minutes --> 3480 seconds --> 3480000 ms
-      # 62 minutes --> 3480 seconds --> 3720000 ms
+      # 62 minutes --> 3480 seconds --> 3840000 ms
 
-      # sort tracks that have been around at least 9 hours
+      # sort tracks that have been around at least XX hours
       time_formula = "%Y-%m-%d %H:%M:%S" # for coercing Ruby datetime to soundcloud format
       start_date = options[:from].minutes.ago
       end_date = options[:to].minutes.ago
@@ -41,8 +42,7 @@ class SoundcloudService
       from = URI.encode(start_date.strftime(time_formula))
       to = URI.encode(end_date.strftime(time_formula))
 
-      # addtl filters to consider: &bpm[from]=60&bpm[to]=120
-      "created_at[from]=#{from}&created_at[to]=#{to}&duration[from]=3480000&duration[to]=3720000&filter=public&type=remix&limit=200"
+      "created_at[from]=#{from}&created_at[to]=#{to}&duration[from]=3480000&duration[to]=3720000&filter=public&limit=200"
     end
 
     def hot_tracks
@@ -52,10 +52,20 @@ class SoundcloudService
       resp = Curl.get(BASE_URL + TRACKS_ENDPOINT + "?client_id=#{CLIENT_ID}&#{filters}")
       tracks = JSON.parse(resp.body)
 
-      # returns IDs of tracks with X+ plays; removes 'nil' values
+      # returns IDs of tracks that match secret sauce prefs
       tracks.map do |t|
         if t['playback_count'].present?
+
+          # 1. is this track really music?
+          tags = track['tag_list'].split.map(&:downcase) # sanitize all the tags to downcase
+          next if tags.any? {|t| NEGATIVE_TAGS.include?(t)} # ignore track if it matches negative keywords
+
+          # 2. does this track have a ridiculous BPM?
+          next if !!track['bpm'] && track['bpm'] > 200
+
+          # 3. ensure track has at least N plays
           t['id'] if t['playback_count'] > 500
+
         end
       end.compact
     end

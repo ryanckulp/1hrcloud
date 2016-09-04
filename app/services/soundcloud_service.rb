@@ -114,11 +114,14 @@ class SoundcloudService
 
       # only update playlist if new hot tracks were found
       if previous_track_ids.uniq.sort != final_track_ids.uniq.sort
-        resp = Curl.put(BASE_URL_PUT + PLAYLISTS_ENDPOINT + PLAYLIST_ID + auth, params.to_json) do |http|
+        Curl.put(BASE_URL_PUT + PLAYLISTS_ENDPOINT + PLAYLIST_ID + auth, params.to_json) do |http|
           http.headers['Origin'] = 'https://soundcloud.com'
           http.headers['Authorization'] = "OAuth #{access_token}"
-          http.verbose = true
         end
+
+        playlist = Playlist.find_or_create_by(soundcloud_id: playlist_id)
+        playlist.track_ids = final_track_ids
+        playlist.save
       end
     end
 

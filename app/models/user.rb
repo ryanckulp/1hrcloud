@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable
   validates_presence_of :email
+  has_many :playlists
 
   def soundcloud_profile
     SoundcloudService.me(self)

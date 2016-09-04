@@ -67,8 +67,10 @@ class SoundcloudService
         if t['playback_count'].present?
 
           # 1. is this track really music?
-          tags = t['tag_list'].split.map(&:downcase) # sanitize all the tags to downcase
-          next if tags.any? {|tag| NEGATIVE_TAGS.include?(tag)} # ignore track if it matches negative keywords
+          if !!t['tag_list']
+            tags = t['tag_list'].split.map(&:downcase) # sanitize all the tags to downcase
+            next if tags.any? {|tag| NEGATIVE_TAGS.include?(tag)} # ignore track if it matches negative keywords
+          end
 
           # 2. does this track have a ridiculous BPM?
           next if !!t['bpm'] && t['bpm'] > MAXIMUM_BPM

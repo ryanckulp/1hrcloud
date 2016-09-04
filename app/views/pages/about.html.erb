@@ -1,3 +1,9 @@
+<% unless flash[:notice].nil? %>
+  <div class="alert alert-success">
+    <p class="alert-link"><%= flash[:notice] %></p>
+  </div>
+<% end %>
+
 <div class="about">
   <p><strong>One Hour Cloud</strong> was created by <a href="http://www.ryanckulp.com" alt="Ryan Kulp" target="_blank">Ryan Kulp</a>.</p>
   <p><a href="https://github.com/ryanckulp/1hrcloud" target="_blank">Check out the code</a> or <a href="http://www.ryanckulp.com/projects" target="_blank">my other projects</a>.</p>

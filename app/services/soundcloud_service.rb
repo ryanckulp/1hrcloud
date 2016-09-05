@@ -66,6 +66,8 @@ class SoundcloudService
       tracks.map do |t|
         if t['playback_count'].present?
 
+          next if !!t['title'] && t['title'].downcase.include?('liveset')
+
           # 1. is this track really music?
           if !!t['tag_list']
             tags = t['tag_list'].split.map(&:downcase) # sanitize all the tags to downcase
@@ -76,7 +78,7 @@ class SoundcloudService
           next if !!t['bpm'] && t['bpm'] > MAXIMUM_BPM
 
           # 3. skip tracks that are live recordings
-          next if !!t['track_type'] && t['track_type'] == 'recording'
+          next if !!t['track_type'] && (t['track_type'] == 'recording' || t['track_type'] == 'live')
 
           # 4. ensure track has at least N plays
           t['id'] if t['playback_count'] > MINIMUM_PLAY_COUNT

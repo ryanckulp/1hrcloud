@@ -54,7 +54,7 @@ class SoundcloudService
       created_at_timespan = created_at_filter(options)
       duration = duration_filter
 
-      "#{created_at_timespan}&#{duration}&filter=public&genres=Electronic&limit=200"
+      "#{duration}&filter=public&#{created_at_timespan}&limit=200"
     end
 
     def hot_tracks
@@ -90,7 +90,7 @@ class SoundcloudService
       JSON.parse(resp.body)['tracks']
     end
 
-    def refresh_access_token
+    def refresh_access_token!
       u = User.find(1) # hard-coded admin user who owns the playlist
       refresh_token = u.refresh_token
       code = u.code
@@ -114,7 +114,7 @@ class SoundcloudService
     end
 
     def get_access_token
-      refresh_access_token
+      refresh_access_token!
       User.find(1).access_token
     end
 

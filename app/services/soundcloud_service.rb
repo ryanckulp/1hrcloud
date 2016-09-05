@@ -19,6 +19,7 @@ class SoundcloudService
 
   # filters
   NEGATIVE_TAGS = ['food', 'cook', 'how-to', 'learn', 'podcast']
+  NEGATIVE_TITLES = ['liveset', 'festival']
   TIME_FORMULA = "%Y-%m-%d %H:%M:%S" # coerces Ruby datetime to soundcloud (yyyy-mm-dd hh:mm:ss)
   MINIMUM_PLAY_COUNT = ENV['SOUNDCLOUD_MINIMUM_PLAYS'].to_i
   MAXIMUM_BPM = ENV['SOUNDCLOUD_MAXIMUM_BPM'].to_i
@@ -66,7 +67,10 @@ class SoundcloudService
       tracks.map do |t|
         if t['playback_count'].present?
 
-          next if !!t['title'] && t['title'].downcase.include?('liveset')
+          if !!t['title']
+            title_words = t['title'].split.map(&:downcase)
+            next if title_words.any? {|word| NEGATIVE_TITLES.include?(word)} # ignore track if it matches negative keywords
+          end
 
           # 1. is this track really music?
           if !!t['tag_list']
